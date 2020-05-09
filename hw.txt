@@ -1,1 +1,10 @@
+sudo apt-get install update
+sudo apt-get install git
+sudo apt-get install openssh-server
+ip a
+ssh my-ip
+git checkout branch1
+git status
+git add -a
+git commit -m 'hw_update'
 git push -u origin branch1
