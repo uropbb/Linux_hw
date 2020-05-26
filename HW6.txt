@@ -1,0 +1,17 @@
+1.
+#!/bin/bash
+
+usage(){
+        cat << EOF
+ This script created for remove empty rows from txt-file and change all letters to capital one.
+ Usage: $0 [FILE]
+ Example:
+  $0 --help 
+  $0 /tmp/task.txt
+EOF
+}
+if [[ $1 = --help ]] ; then usage
+fi
+if [[ -h $1 || -f $1 ]] ; then
+        sed 's/.*/\U&/;/^$/d' $1
+fi

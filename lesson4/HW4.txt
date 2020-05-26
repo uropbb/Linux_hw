@@ -1,0 +1,36 @@
+1. Создаем пользователя 
+sudo useradd suser -d /home/suser -m -s /bin/bash -p ...
+Добавляем его в конфиг sudo
+sudo vim -f /etc/sudoers.d/suser
+Логинимся под новым пользователем и проверяем sudo
+su suser
+sudo su
+
+2.
+sudo groupadd developer
+sudo useradd suser1 -d /home/suser1 -m -s /bin/bash -p $(openssl passwd -6 'suser1') -G developer
+sudo useradd suser2 -d /home/suser2 -m -s /bin/bash -p $(openssl passwd -6 'suser2') -G developer
+sudo mkdir -p /var/devs
+добавляем SetGID созданной группе
+sudo chmod g+s /var/devs
+добавляем запрет на удаление в созданой группе
+sudo chmod g+t /var/devs
+sudo chown root:developer /var/devs
+
+3.
+sudo groupadd web 
+if [ $?==0 ] 
+ then 
+	echo "success. WEb-group is created" 
+ else 
+	echo "fail, Web-group is existed arlready"; cat /etc/group	| grep web 
+fi
+
+sudo groupadd geekbrains 
+if [ $?==0 ] 
+ then 
+	echo "success. GB-group is created" 
+ else 
+	echo "fail, GB-group is existed arlready"; cat /etc/group	| grep geekbrains 
+fi
+
