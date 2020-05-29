@@ -1,0 +1,48 @@
+1.1 	iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+	iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+	ufw allow 80
+	ufw allow 443
+
+1.2 	server {
+        listen 80;
+        server_name igor-VirtualBox;
+        location /user {
+                return 200 "HTTP Hi $user";
+        }
+        location / {
+                return 404 "page not found";
+        }
+}
+
+curl -L http://igor-VirtualBox/user
+Возникает какая то проблема с $user. Фаил conf не работает с такой записью
+
+2.
+Самоподписаные сертификаты нужны для разработчиков чтобы попробывать и отладить работу с httpS окружением.
+Для начала необходимо создать такой сертификат с помощью утилиты openSSL, потом скопировать в папку с сертификатами
+и перезагрузить nginx. Чтобы убрать сообщение о небезопасном соединении в браузере, такой сертификат нужно добавить в доверенные в настройках брайзера
+
+server {
+        listen 80;
+        server_name igor-VirtualBox;
+        location /user {
+                return 200 "HTTP Hi user";
+        }
+        location / {
+                return 404 "page not found";
+        }
+
+        listen 443 ssl http2;
+        server_name igor-VirtualBox;
+
+        ssl_certificate /etc/ssl/certs/localhost.crt;
+        ssl_certificate_key /etc/ssl/private/localhost.key;
+
+        ssl_protocols TLSv1.2 TLSv1.1 TLSv1;
+
+        root /var/www/html;
+
+        index index.html;
+}
+
+Мне кажется симметричное шифрование более рациональное и поэтому скорость обработки запросов возрастает.
